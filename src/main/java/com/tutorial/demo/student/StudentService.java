@@ -3,12 +3,7 @@ package com.tutorial.demo.student;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,7 +24,7 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public void addNewStudent(Student student) {
+    public Long addNewStudent(Student student) {
 
         Optional<Student> studentOptional = studentRepository.findStudentByEmail(student.getEmail());
 
@@ -38,7 +33,9 @@ public class StudentService {
             throw new IllegalStateException("Email già presente");
         }
 
-        studentRepository.save(student);
+        Student newStudent = studentRepository.save(student);
+
+        return newStudent.getId();
     }
 
     public void deleteStudent(Long studentId) {
@@ -54,7 +51,7 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateStudent(Long studentId, String name, String email) {
+    public Optional<Student> updateStudent(Long studentId, String name, String email) {
 
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalStateException("Studente con id " + studentId + " non esiste."));
@@ -75,5 +72,7 @@ public class StudentService {
 
             student.setEmail(email);
         }
+
+        return studentRepository.findById(studentId);
     }
 }

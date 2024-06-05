@@ -1,9 +1,11 @@
 package com.tutorial.demo.student;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "api/v1/student")
@@ -24,9 +26,11 @@ public class StudentController {
     }
 
     @PostMapping("/create")
-    public void registerNewStudent(@RequestBody Student student) {
+    public ResponseEntity<Long> registerNewStudent(@RequestBody Student student) {
 
-        studentService.addNewStudent(student);
+        Long newStudentId = studentService.addNewStudent(student);
+
+        return ResponseEntity.ok(newStudentId);
     }
 
     @DeleteMapping("delete/{studentId}")
@@ -36,8 +40,8 @@ public class StudentController {
     }
 
     @PutMapping("updateStudent/{studentId}")
-    public void updateStudent(@PathVariable("studentId") Long studentId, @RequestParam(required = false) String name, @RequestParam(required = false) String email) {
+    public Optional<Student> updateStudent(@PathVariable("studentId") Long studentId, @RequestParam(required = false) String name, @RequestParam(required = false) String email) {
 
-        studentService.updateStudent(studentId, name, email);
+         return studentService.updateStudent(studentId, name, email);
     }
 }
