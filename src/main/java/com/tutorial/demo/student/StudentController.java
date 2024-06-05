@@ -17,25 +17,25 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Student> getStudents() {
 
         return studentService.getStudents();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public void registerNewStudent(@RequestBody Student student) {
 
         studentService.addNewStudent(student);
     }
 
-    @DeleteMapping(path = "{studentId}")
+    @DeleteMapping("delete/{studentId}")
     public void deleteStudent(@PathVariable("studentId") Long studentId) {
 
         studentService.deleteStudent(studentId);
     }
 
-    @PutMapping(path = "{studentId}")
+    @PutMapping("updateStudent/{studentId}")
     public void updateStudent(@PathVariable("studentId") Long studentId, @RequestParam(required = false) String name, @RequestParam(required = false) String email) {
 
         studentService.updateStudent(studentId, name, email);
