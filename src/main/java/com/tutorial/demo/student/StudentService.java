@@ -1,5 +1,6 @@
 package com.tutorial.demo.student;
 
+import com.tutorial.demo.exceptions.StudentCRUDException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class StudentService {
 
         if (studentOptional.isPresent()) {
 
-            throw new IllegalStateException("Email già presente");
+            throw new StudentCRUDException("Email già associata ad un account");
         }
 
         Student newStudent = studentRepository.save(student);
@@ -44,7 +45,7 @@ public class StudentService {
 
         if (!studentExists) {
 
-            throw new IllegalStateException("Studente con id " + studentId + " non esiste.");
+            throw new StudentCRUDException("Studente con id " + studentId + " non esiste.");
         }
 
         studentRepository.deleteById(studentId);
@@ -54,7 +55,7 @@ public class StudentService {
     public Optional<Student> updateStudent(Long studentId, String name, String email) {
 
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new IllegalStateException("Studente con id " + studentId + " non esiste."));
+                .orElseThrow(() -> new StudentCRUDException("Studente con id " + studentId + " non esiste."));
 
         if (name != null && !name.isEmpty() && !Objects.equals(student.getName(), name)) {
 
@@ -67,7 +68,7 @@ public class StudentService {
 
             if (studentEmail.isPresent()) {
 
-                throw new IllegalStateException("L'email " + email + " è già associata ad un account.");
+                throw new StudentCRUDException("L'email " + email + " è già associata ad un account.");
             }
 
             student.setEmail(email);
